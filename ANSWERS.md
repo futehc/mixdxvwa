@@ -21,7 +21,7 @@ The initial payload, which resulted in an error.
 ```
 [no match of right hand side value: {:error, %Postgrex.Error{connection_id: 52389, message: nil, postgres: %{code: :undefined_function, file: "parse_oper.c", hint: "No operator matches the given name and argument types. You might need to add explicit type casts.", line: "647", message: "operator does not exist: boolean = integer", pg_code: "42883", position: "94", routine: "op_error", severity: "ERROR", unknown: "ERROR"}, query: "SELECT p.id, p.name, p.milliliters, p.price, p.secret\nFROM potions as p\nWHERE p.name LIKE '%'=0--+%' AND p.secret = false\n"}}]
 ```
-The error showed the direct interpolationo of user input ['name'] into SQL query, indicating a strong potential for exploiting a SQL injection vulnerability..
+The error showed the direct interpolation of user input ['name'] into SQL query, indicating a strong potential for exploiting a SQL injection vulnerability.
 
 ![1_SQL](https://github.com/user-attachments/assets/1d82144b-cd17-4e18-9e95-e0513628706e)
 
@@ -125,7 +125,7 @@ To keep everyone informed, I would set up notifications via email, Slack, or Mic
 
 ### Example Pipeline
 
-##### (Jenkins + Bitbucket + Sonarqube + Defectdojo + Slack (Tools, platform, structure and logic can be changed if required))
+##### (Tools and platforms: Jenkins + Bitbucket + SonarQube + DefectDojo + Slack (Tools, platform, structure and logic can be changed if required))
 ##### (Trigger : Pull Request Created/updated (can be changed to commit/push))
 ##### (Build status always SUCCESS , individual stage status can be FAILURE (pipeline structure and logic can be changed if required))
 
@@ -303,7 +303,7 @@ def uploadScanToDefectDojo(scanType, scanOutputFile, tag) {
 
 ### 2. A potion's review box.
 
-#### Vulnerability: Cross-Site Scription (Stored)
+#### Vulnerability: Cross-Site Scripting (Stored)
 
 #### Description: 
 
@@ -354,11 +354,6 @@ As an initial test vector, I removed the CSRF token and forwarded the request to
 
 ![6 CSRF](https://github.com/user-attachments/assets/0420800e-e0e1-414c-82a7-c759d75c92e8)
 ![7_CSRF](https://github.com/user-attachments/assets/e8a25ed0-5a24-4356-90be-3201be2cf710)
-
-
-
-
-
 
 #### Exploit: 
 
