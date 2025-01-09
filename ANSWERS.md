@@ -21,7 +21,7 @@ The initial payload, which resulted in an error.
 ```
 [no match of right hand side value: {:error, %Postgrex.Error{connection_id: 52389, message: nil, postgres: %{code: :undefined_function, file: "parse_oper.c", hint: "No operator matches the given name and argument types. You might need to add explicit type casts.", line: "647", message: "operator does not exist: boolean = integer", pg_code: "42883", position: "94", routine: "op_error", severity: "ERROR", unknown: "ERROR"}, query: "SELECT p.id, p.name, p.milliliters, p.price, p.secret\nFROM potions as p\nWHERE p.name LIKE '%'=0--+%' AND p.secret = false\n"}}]
 ```
-The error showed the direct interpolationo of user input ['name'] into SQL query, which showed that there is a strong possibility of exploiting a sql injection vulnerability.
+The error showed the direct interpolationo of user input ['name'] into SQL query, indicating a strong potential for exploiting a SQL injection vulnerability..
 
 ![1_SQL](https://github.com/user-attachments/assets/1d82144b-cd17-4e18-9e95-e0513628706e)
 
@@ -193,7 +193,7 @@ pipeline {
                         def sonarProjectKey = 'key'
                         def sonarHostUrl = 'https://sonar.xyz.com/'
                         def sonarBaseDir = "${env.WORKSPACE}"
-                        def sonarbin = '/opt/sonar-scanner/sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner'
+                        def sonarbin = '/opt/sonar-scanner/sonar-scanner-linux/bin/sonar-scanner'
                         def reportbin = '/usr/local/bin/sonar-report'
                         def sonarOutputFile = "${env.WORKSPACE}/SonarReport.html"
                         def commitMessage = sh(returnStdout: true, script: 'git log -1 --pretty=%B').trim()
@@ -202,7 +202,7 @@ pipeline {
                         withSonarQubeEnv('Sonar_Server') {
                             sh "\"${sonarbin}\" -Dsonar.host.url=${sonarHostUrl} -Dsonar.projectBaseDir=${sonarBaseDir} -Dsonar.login=${SONAR_TOKEN} -Dsonar.branch.name=${env.BITBUCKET_SOURCE_BRANCH}"
                         }
-                        sh "\"${reportbin}\" --project=${sonarProjectKey} --sonarurl=https://sonardev.arpatech.com/ --sonarcomponent=${sonarProjectKey} --sonartoken=${SONAR_TOKEN} --branch=${env.BITBUCKET_SOURCE_BRANCH} --in-new-code-period --output ${sonarOutputFile}"
+                        sh "\"${reportbin}\" --project=${sonarProjectKey} --sonarurl=https://sonardev.xyz.com/ --sonarcomponent=${sonarProjectKey} --sonartoken=${SONAR_TOKEN} --branch=${env.BITBUCKET_SOURCE_BRANCH} --in-new-code-period --output ${sonarOutputFile}"
                         uploadScanToDefectDojo("SonarQube Scan", sonarOutputFile, tag)
                     }
                 }
@@ -347,10 +347,20 @@ Cross-site request forgery (also known as CSRF) is a web security vulnerability 
 
 I exploited a CSRF vulnerability in the potion shop application. While logged in as attacker@gmail.com, I crafted a malicious HTML form that submitted a review to the endpoint http://localhost:4000/potion/review/2. In the form, I included a hidden input field with the email set to victim@gmail.com. When I submitted the form, the review was successfully posted, and it appeared as if it had been submitted by victim@gmail.com. This demonstrates a CSRF vulnerability, as the server did not verify that the logged-in user owned the email specified in the form and CSRF token. By exploiting this flaw, I was able to forge actions on behalf of another user, highlighting the need for proper CSRF protection and server-side validation of CSRF tokens.
 
+As an initial test vector, I removed the CSRF token and forwarded the request to the server. The review was successfully submitted, indicating a strong potential for exploiting a CSRF vulnerability.  
+
+![No_CSRFtoken_Validation](https://github.com/user-attachments/assets/97c9eab9-41ee-4328-91be-2a32c4aac8cf)
+![no_csrf_valiation2](https://github.com/user-attachments/assets/12fe0b9c-bc46-4fc4-983f-5a350825bfe1)
+
 ![6 CSRF](https://github.com/user-attachments/assets/0420800e-e0e1-414c-82a7-c759d75c92e8)
 ![7_CSRF](https://github.com/user-attachments/assets/e8a25ed0-5a24-4356-90be-3201be2cf710)
 
-#### Exploit:        : 
+
+
+
+
+
+#### Exploit: 
 
 ```
 <!DOCTYPE html>
