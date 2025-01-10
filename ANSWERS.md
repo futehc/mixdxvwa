@@ -23,7 +23,8 @@ The initial payload, which resulted in an error.
 ```
 The error showed the direct interpolation of user input ['name'] into SQL query, indicating a strong potential for exploiting a SQL injection vulnerability.
 
-![1_SQL](https://github.com/user-attachments/assets/1d82144b-cd17-4e18-9e95-e0513628706e)
+![1_SQL](https://github.com/user-attachments/assets/fc71a205-2862-4606-98b5-c2dfa05fa427)
+
 
 For successful exploitation, the following payload was utilized. 
 
@@ -31,22 +32,24 @@ For successful exploitation, the following payload was utilized.
 
 The payload ' OR 1=1 -- exploits a SQL injection vulnerability to bypass restrictions in the query. Normally, the query filters potions by name and ensures they are not secret. However, the payload ends the name filter condition and adds OR 1=1, which always evaluates to TRUE, making the WHERE clause ineffective. The -- comments out the rest of the query, ignoring any conditions like p.secret = false. This tricks the database into returning all potions, including those that are normally hidden or secret, exposing sensitive data.
 
-![2_SQL](https://github.com/user-attachments/assets/904f4b92-0b78-41a9-83c8-dfd12a7c8d42)
+![2_SQL](https://github.com/user-attachments/assets/32d4b925-2f91-4561-a431-f9a55ebd659e)
+
 
 To retrieve the DBMS banner, the following link was used along with the payload.
 
 ```http://localhost:4000/?name=potion%27+AND+8683%3DCAST%28%28CHR%28113%29%7C%7CCHR%28112%29%7C%7CCHR%28112%29%7C%7CCHR%28120%29%7C%7CCHR%28113%29%29%7C%7C%28COALESCE%28CAST%28VERSION%28%29+AS+VARCHAR%2810000%29%29%3A%3Atext%2C%28CHR%2832%29%29%29%29%3A%3Atext%7C%7C%28CHR%28113%29%7C%7CCHR%28122%29%7C%7CCHR%2898%29%7C%7CCHR%28120%29%7C%7CCHR%28113%29%29+AS+NUMERIC%29--+Lqjf```
 
-![Dbms_Burp](https://github.com/user-attachments/assets/02af0554-c310-4bdd-ab6a-8747982adb0f)
+![Dbms_Burp](https://github.com/user-attachments/assets/4123e649-7465-4ffc-acc8-b1fee0bddd23)
 
-![3_SQL](https://github.com/user-attachments/assets/5848d3b7-d826-457e-84c4-50d778deb33a)
+
+![3_SQL](https://github.com/user-attachments/assets/822d2ecc-f090-4087-8e82-7baebed31178)
+
 
 To retrieve the hash of the Database Management System user, the following approach was utilized.
 
 ```http://localhost:4000/?name=potion%27%20AND%203205=CAST((CHR(113)||CHR(112)||CHR(112)||CHR(120)||CHR(113))||(SELECT%20COALESCE(CAST(passwd%20AS%20VARCHAR(10000))::text,(CHR(32)))%20FROM%20pg_shadow)::text||(CHR(113)||CHR(122)||CHR(98)||CHR(120)||CHR(113))%20AS%20NUMERIC)--%20iRse```
 
-![4_SQL](https://github.com/user-attachments/assets/9bc8eb1d-c87b-4219-a391-7e4fe3493920)
-
+![4_SQL](https://github.com/user-attachments/assets/ad5de96b-3fb7-4ecc-9794-2fe9b8a0a6c2)
 
 #### Impact:
 
@@ -313,7 +316,7 @@ Stored cross-site scripting (also known as second-order or persistent XSS) arise
 
 I injected the payload <svg onload=alert('XSS')> into the potion's review box on the web application. Since the application doesn't properly sanitize or escape user input, the payload was stored in the database as part of the review. As a result, whenever any user visits the page where the review is displayed, the browser renders the SVG element and triggers the onload event, executing the embedded JavaScript code. This causes an alert box with the message XSS to pop up on the user's screen. By doing this, I exploited the stored XSS vulnerability to execute arbitrary JavaScript code whenever a user views the affected review. 
 
-![5 XSS_Stored](https://github.com/user-attachments/assets/7a60b4a7-d476-4a39-9a11-b1df23a18e9c)
+![5 XSS_Stored](https://github.com/user-attachments/assets/675f947f-608d-4906-ba89-4f8c171191a5)
 
 #### Impact: 
 
@@ -349,13 +352,16 @@ I exploited a CSRF vulnerability in the potion shop application. While logged in
 
 As an initial test vector, I removed the CSRF token and forwarded the request to the server. The review was successfully submitted, indicating a strong potential for exploiting a CSRF vulnerability.  
 
-![No_CSRFtoken_Validation](https://github.com/user-attachments/assets/97c9eab9-41ee-4328-91be-2a32c4aac8cf)
+![No_CSRFtoken_Validation](https://github.com/user-attachments/assets/bf36ce0b-b985-4532-a35b-28e39d994e40)
 
-![no_csrf_valiation2](https://github.com/user-attachments/assets/12fe0b9c-bc46-4fc4-983f-5a350825bfe1)
+![no_csrf_valiation2](https://github.com/user-attachments/assets/ab093107-8a37-4347-b410-6672c3c23f59)
 
-![6 CSRF](https://github.com/user-attachments/assets/0420800e-e0e1-414c-82a7-c759d75c92e8)
+To showcase the exploit, I crafted an HTML page with embedded JavaScript. I hosted this exploit, and after accessing it, the review appeared as if it had been submitted by victim@gmail.com.
 
-![7_CSRF](https://github.com/user-attachments/assets/e8a25ed0-5a24-4356-90be-3201be2cf710)
+![6 CSRF](https://github.com/user-attachments/assets/4e57acb6-f49c-4868-aee2-b1772bf9ab3a)
+
+![7_CSRF](https://github.com/user-attachments/assets/a0783293-431d-4a8e-a9e2-29af8a956c3f)
+
 
 #### Exploit: 
 
@@ -432,16 +438,15 @@ To demonstrate the issue, I crafted a malicious URL.
 
 When this URL was accessed by victim@gmail.com, a GET request was automatically sent by the browser to the server, resulting in the bio being changed to "Got Hacked". 
 
-![csrf_burp](https://github.com/user-attachments/assets/2067f1a8-8469-4cd3-b172-608498d4829b)
+![csrf_burp](https://github.com/user-attachments/assets/fe0d0376-acab-44de-a96f-51c55f8a4679)
 
-![bio_change_burp](https://github.com/user-attachments/assets/67ce482b-a927-4a68-8f8f-dd72b48e7956)
-
+![bio_change_burp](https://github.com/user-attachments/assets/c2be8e94-1b34-4ca0-9b5b-9918c8ce8985)
 
 To showcase the exploit, I crafted an HTML page with embedded JavaScript to redirect the victim’s browser to the malicious URL. I hosted this exploit, and after accessing it, the bio of the victim user was successfully changed to "Got Hacked".
 
-![Edit_bio](https://github.com/user-attachments/assets/999c085a-0f87-4566-ae43-0173745939eb)
+![Edit_bio](https://github.com/user-attachments/assets/239da47a-a58e-423d-9a5e-e09a320c2dc7)
 
-![8_CSRF_Reuse](https://github.com/user-attachments/assets/33d25979-1621-4f18-b1e3-970b7bda608c)
+![8_CSRF_Reuse](https://github.com/user-attachments/assets/e91236e2-9807-4a7d-933f-674326ebf971)
 
 #### Exploit:         : 
 ```
