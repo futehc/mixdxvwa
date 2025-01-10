@@ -350,9 +350,11 @@ I exploited a CSRF vulnerability in the potion shop application. While logged in
 As an initial test vector, I removed the CSRF token and forwarded the request to the server. The review was successfully submitted, indicating a strong potential for exploiting a CSRF vulnerability.  
 
 ![No_CSRFtoken_Validation](https://github.com/user-attachments/assets/97c9eab9-41ee-4328-91be-2a32c4aac8cf)
+
 ![no_csrf_valiation2](https://github.com/user-attachments/assets/12fe0b9c-bc46-4fc4-983f-5a350825bfe1)
 
 ![6 CSRF](https://github.com/user-attachments/assets/0420800e-e0e1-414c-82a7-c759d75c92e8)
+
 ![7_CSRF](https://github.com/user-attachments/assets/e8a25ed0-5a24-4356-90be-3201be2cf710)
 
 #### Exploit: 
@@ -428,9 +430,16 @@ To demonstrate the issue, I crafted a malicious URL.
 
 ```http://localhost:4000/users/settings/edit_bio?user%5Bbio%5D=Got+Hacked```
 
-When this URL was accessed by victim@gmail.com, a GET request was automatically sent by the browser to the server, resulting in the bio being changed to "Got Hacked". To showcase the exploit, I crafted an HTML page with embedded JavaScript to redirect the victim’s browser to the malicious URL. I hosted this exploit, and after accessing it, the bio of the victim user was successfully changed to "Got Hacked".
+When this URL was accessed by victim@gmail.com, a GET request was automatically sent by the browser to the server, resulting in the bio being changed to "Got Hacked". 
 
 ![csrf_burp](https://github.com/user-attachments/assets/2067f1a8-8469-4cd3-b172-608498d4829b)
+
+![bio_change_burp](https://github.com/user-attachments/assets/67ce482b-a927-4a68-8f8f-dd72b48e7956)
+
+
+To showcase the exploit, I crafted an HTML page with embedded JavaScript to redirect the victim’s browser to the malicious URL. I hosted this exploit, and after accessing it, the bio of the victim user was successfully changed to "Got Hacked".
+
+![Edit_bio](https://github.com/user-attachments/assets/999c085a-0f87-4566-ae43-0173745939eb)
 
 ![8_CSRF_Reuse](https://github.com/user-attachments/assets/33d25979-1621-4f18-b1e3-970b7bda608c)
 
