@@ -1,6 +1,4 @@
-# Application Security Engineer Challenge
 
-During the course of the challenge, four vulnerabilities were discovered. One of these vulnerabilities, specifically an SQL injection, was addressed and resolved to successfully complete the challenge.
 
 ### 1. Answer 
 
